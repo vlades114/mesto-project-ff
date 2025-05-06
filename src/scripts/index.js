@@ -35,14 +35,12 @@ const editProfileFormLink = newCardForm.elements.link;
 
 //функция открытия модального окна изображения карточки
 function handleImageOpen(evt) {
-  const curOpenedCard = evt.target.closest('.card');
-  const curOpenedCardImage = curOpenedCard.querySelector('.card__image');
-  const popupCardImage = popupImage.querySelector('.popup__image');
-  const curOpenedCardTitle = curOpenedCard.querySelector('.card__title');
-  const popupCardDescription = popupImage.querySelector('.popup__caption');
+  const image = evt.target;
+  const curCard = evt.target.closest('.card');
 
-  popupCardImage.src = curOpenedCardImage.src;
-  popupCardDescription.textContent = curOpenedCardTitle.textContent;
+  popupImage.querySelector('.popup__image').src = image.src;
+  popupImage.querySelector('.popup__caption').textContent =
+    curCard.querySelector('.card__title').textContent;
 
   handleOpenPopup(popupImage);
 }
@@ -102,7 +100,12 @@ function handleNewPlaceForm(evt) {
       name: newCardFormName.value,
       link: editProfileFormLink.value,
     };
-    const createdCard = createCard(newCard, handleDeleteCard, handleLikeCard, handleImageOpen);
+    const createdCard = createCard(
+      newCard,
+      handleDeleteCard,
+      handleLikeCard,
+      handleImageOpen
+    );
     placesList.prepend(createdCard);
     newCardForm.reset();
   });
