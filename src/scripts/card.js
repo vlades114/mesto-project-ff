@@ -2,7 +2,8 @@
  * Создает карточку с событиями удаления и лайка.
  * @param {Object} cardData - Данные для карточки.
  * @param {Function} handleDeleteCard - Колбэк функция удаления.
- * @param {Function} handleLikeCard - олбэк функция  лайка карточки.
+ * @param {Function} handleLikeCard - Колбэк функция лайка карточки.
+ * @param {Function} handleOpenCard - Колбэк функция открытия карточки.
  * @returns {HTMLElement} Созданная карточка.
  */
 export const createCard = (
