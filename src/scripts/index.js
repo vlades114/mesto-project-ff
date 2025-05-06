@@ -7,8 +7,7 @@ import {
   handleEscKeyDown,
 } from './modal.js';
 
-// Основной контейнер страницы и список карточек
-const page = document.querySelector('.page');
+// Список карточек
 const placesList = document.querySelector('.places__list');
 
 // Кнопки
@@ -31,7 +30,7 @@ const profileDescription = document.querySelector('.profile__description');
 //Форма создания новой карточки
 const newCardForm = document.forms['new-place'];
 const newCardFormName = newCardForm.elements['place-name'];
-const editProfileFormLink = newCardForm.elements.link;
+const newCardFormLink = newCardForm.elements.link;
 
 //функция открытия модального окна изображения карточки
 function handleImageOpen(evt) {
@@ -57,8 +56,6 @@ initialCards.forEach((element) => {
 });
 
 // Инициализация обработчиков событий
-page.addEventListener('keydown', handleEscKeyDown);
-
 profileEditButton.addEventListener('click', () => {
   handleOpenPopup(popupEditProfile);
   editProfileFormName.value = profileTitle.textContent;
@@ -98,7 +95,7 @@ function handleNewPlaceForm(evt) {
   handleFormSubmit(evt, popupNewCard, () => {
     const newCard = {
       name: newCardFormName.value,
-      link: editProfileFormLink.value,
+      link: newCardFormLink.value,
     };
     const createdCard = createCard(
       newCard,

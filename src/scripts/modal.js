@@ -5,6 +5,7 @@
 export const handleOpenPopup = (curPopup) => {
   curPopup.classList.add('popup_is-opened');
   curPopup.addEventListener('click', handleClickOverlayPopup);
+  document.addEventListener('keydown', handleEscKeyDown);
 };
 
 /**
@@ -14,6 +15,7 @@ export const handleOpenPopup = (curPopup) => {
 export const handleClosePopup = (curPopup) => {
   curPopup.classList.remove('popup_is-opened');
   curPopup.removeEventListener('click', handleClickOverlayPopup);
+  document.removeEventListener('keydown', handleEscKeyDown);
 };
 
 /**
@@ -37,4 +39,4 @@ export const handleClickOverlayPopup = (evt) => {
   if (evt.target.classList.contains('popup')) {
     handleClosePopup(evt.target);
   }
-};
+}
