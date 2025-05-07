@@ -23,25 +23,27 @@ export const createCard = (
   cardImage.alt = cardData.name;
   cardTitle.textContent = cardData.name;
 
-  deleteButton.addEventListener('click', handleDeleteCard);
-  likeButton.addEventListener('click', handleLikeCard);
-  cardImage.addEventListener('click', handleOpenCard);
+  deleteButton.addEventListener('click', () => handleDeleteCard(card));
+  likeButton.addEventListener('click', () => handleLikeCard(likeButton));
+  cardImage.addEventListener('click', () =>
+    handleOpenCard(cardData.link, cardData.name)
+  );
 
   return card;
 };
 
 /**
- * Устанавливает или снимает лайк с карточки
- * @param {Event} evt - click событие.
+ * Устанавливает или снимает лайк с карточки.
+ * @param {HTMLElement} button - Кнопка лайка.
  */
-export const handleLikeCard = (evt) => {
-  evt.target.classList.toggle('card__like-button_is-active');
+export const handleLikeCard = (button) => {
+  button.classList.toggle('card__like-button_is-active');
 };
 
 /**
  * Удаляет карточку.
- * @param {Event} evt - click событие.
+ * @param {HTMLElement} curCard - Элемент карточки.
  */
-export const handleDeleteCard = (evt) => {
-  evt.target.closest('.card').remove();
+export const handleDeleteCard = (curCard) => {
+  curCard.remove();
 };

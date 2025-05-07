@@ -1,11 +1,7 @@
 import '../pages/index.css';
 import { initialCards } from './cards.js';
 import { createCard, handleLikeCard, handleDeleteCard } from './card.js';
-import {
-  handleOpenPopup,
-  handleClosePopup,
-  handleEscKeyDown,
-} from './modal.js';
+import { openModal, closeModal } from './modal.js';
 
 // Список карточек
 const placesList = document.querySelector('.places__list');
@@ -19,6 +15,8 @@ const popups = document.querySelectorAll('.popup');
 const popupEditProfile = document.querySelector('.popup_type_edit');
 const popupNewCard = document.querySelector('.popup_type_new-card');
 const popupImage = document.querySelector('.popup_type_image');
+const popupImageSrc = document.querySelector('.popup__image');
+const popupImageCaption = document.querySelector('.popup__caption');
 
 //Форма редактирования профиля
 const editProfileForm = document.forms['edit-profile'];
@@ -32,16 +30,16 @@ const newCardForm = document.forms['new-place'];
 const newCardFormName = newCardForm.elements['place-name'];
 const newCardFormLink = newCardForm.elements.link;
 
-//функция открытия модального окна изображения карточки
-function handleImageOpen(evt) {
-  const image = evt.target;
-  const curCard = evt.target.closest('.card');
+/**
+ * функция открытия модального окна изображения карточки.
+ * @param {string} link - Ссылка на изображение.
+ * @param {string} name - Название изображения.
+ */
+function handleImageOpen(link, name) {
+  popupImage.querySelector('.popup__image').src = link;
+  popupImage.querySelector('.popup__caption').textContent = name;
 
-  popupImage.querySelector('.popup__image').src = image.src;
-  popupImage.querySelector('.popup__caption').textContent =
-    curCard.querySelector('.card__title').textContent;
-
-  handleOpenPopup(popupImage);
+  openModal(popupImage);
 }
 
 //Код отображения карточек при открытии страницы
@@ -57,12 +55,12 @@ initialCards.forEach((element) => {
 
 // Инициализация обработчиков событий
 profileEditButton.addEventListener('click', () => {
-  handleOpenPopup(popupEditProfile);
+  openModal(popupEditProfile);
   editProfileFormName.value = profileTitle.textContent;
   editProfileFormDescription.value = profileDescription.textContent;
 });
 
-newCardAddButton.addEventListener('click', () => handleOpenPopup(popupNewCard));
+newCardAddButton.addEventListener('click', () => openModal(popupNewCard));
 
 editProfileForm.addEventListener('submit', handleEditForm);
 
@@ -71,15 +69,21 @@ newCardForm.addEventListener('submit', handleNewPlaceForm);
 popups.forEach((popup) => {
   const closeButton = popup.querySelector('.popup__close');
   if (closeButton) {
-    closeButton.addEventListener('click', () => handleClosePopup(popup));
+    closeButton.addEventListener('click', () => closeModal(popup));
   }
+
+  popup.addEventListener('mousedown', (evt) => {
+    if (evt.target.classList.contains('popup')) {
+      closeModal(popup);
+    }
+  });
 });
 
 //Обработчик отправки форм
 function handleFormSubmit(evt, popup, callback) {
   evt.preventDefault();
   callback();
-  handleClosePopup(popup);
+  closeModal(popup);
 }
 
 //Фнкция-обработчик события открытия модального окна для редактирования профиля
