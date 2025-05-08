@@ -35,9 +35,10 @@ const newCardFormLink = newCardForm.elements.link;
  * @param {string} link - Ссылка на изображение.
  * @param {string} name - Название изображения.
  */
-function handleImageOpen(link, name) {
-  popupImage.querySelector('.popup__image').src = link;
-  popupImage.querySelector('.popup__caption').textContent = name;
+function handleOpenCard(link, alt, name) {
+  popupImageSrc.src = link;
+  popupImageSrc.src = alt;
+  popupImageCaption.textContent = name;
 
   openModal(popupImage);
 }
@@ -48,7 +49,7 @@ initialCards.forEach((element) => {
     element,
     handleDeleteCard,
     handleLikeCard,
-    handleImageOpen
+    handleOpenCard
   );
   placesList.append(newCard);
 });
