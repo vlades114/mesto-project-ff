@@ -1,0 +1,7 @@
+.popup__content.popup__content_delete-card {
+    min-height: 181px;
+}
+
+.popup__content.popup__content_update-avatar {
+    min-height: 272px;
+}
