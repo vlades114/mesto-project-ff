@@ -122,28 +122,28 @@ function handleDeleteCard(cardId, curCard) {
 function handleLikeCard(likeButton, likeCounter, cardId) {
   if (!likeButton.classList.contains('card__like-button_is-active')) {
     putLike(cardId)
-      .then(
-        (refrshedCardData) =>
-          (likeCounter.textContent = refrshedCardData.likes
-            ? refrshedCardData.likes.length
-            : 0)
-      )
+      .then((refrshedCardData) => {
+        likeCounter.textContent = refrshedCardData.likes
+          ? refrshedCardData.likes.length
+          : 0;
+
+        likeCard(likeButton);
+      })
       .catch((err) => {
         console.log(err);
       });
-    likeCard(likeButton);
   } else {
     removeLike(cardId)
-      .then(
-        (refrshedCardData) =>
-          (likeCounter.textContent = refrshedCardData.likes
-            ? refrshedCardData.likes.length
-            : 0)
-      )
+      .then((refrshedCardData) => {
+        likeCounter.textContent = refrshedCardData.likes
+          ? refrshedCardData.likes.length
+          : 0;
+
+        likeCard(likeButton);
+      })
       .catch((err) => {
         console.log(err);
       });
-    likeCard(likeButton);
   }
 }
 
@@ -156,9 +156,7 @@ profileEditButton.addEventListener('click', () => {
 });
 
 newCardAddButton.addEventListener('click', () => {
-  clearValidation(popupNewCard, config);
   openModal(popupNewCard);
-  newCardForm.reset();
 });
 
 imageOverlay.addEventListener('click', () => {
@@ -228,6 +226,7 @@ function handleNewPlaceForm(evt) {
       );
       placesList.prepend(createdCard);
       closeModal(popupNewCard);
+      clearValidation(popupNewCard, config)
       newCardForm.reset();
     })
     .finally(() => {

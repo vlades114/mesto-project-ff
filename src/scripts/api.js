@@ -7,24 +7,22 @@ const config = {
   },
 };
 
+//Обработка ответа
+const responseCheck = (res) => {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка: ${res.status}`);
+};
+
 // Получение информации о пользователе с сервера
 export function getUserInfo() {
   return fetch(`${config.baseUrl}/users/me`, {
     method: 'GET',
     headers: config.headers,
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(res.status);
-    })
-    .then((result) => {
-      return result;
-    })
-    .catch((err) => {
-      console.log(`Ошибка: ${err}`);
-    });
+  }).then((res) => {
+    return responseCheck(res);
+  });
 }
 
 // Загрузка карточек с сервера
@@ -32,16 +30,9 @@ export function getInitialCards() {
   return fetch(`${config.baseUrl}/cards`, {
     method: 'GET',
     headers: config.headers,
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .then((result) => {
-      return result;
-    });
+  }).then((res) => {
+    return responseCheck(res);
+  });
 }
 
 //Обновление информации о пользователе
@@ -54,10 +45,7 @@ export function updateUserInfo(newName, newAbout) {
       about: newAbout,
     }),
   }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
+    return responseCheck(res);
   });
 }
 
@@ -70,10 +58,7 @@ export function updateUserAvatar(avatarLink) {
       avatar: avatarLink,
     }),
   }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
+    return responseCheck(res);
   });
 }
 
@@ -87,10 +72,7 @@ export function addCard(newCardTitle, newCardLink) {
       link: newCardLink,
     }),
   }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
+    return responseCheck(res);
   });
 }
 
@@ -100,10 +82,7 @@ export function deleteCard(cardId) {
     method: 'DELETE',
     headers: config.headers,
   }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
+    return responseCheck(res);
   });
 }
 
@@ -113,10 +92,7 @@ export function putLike(cardId) {
     method: 'PUT',
     headers: config.headers,
   }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
+    return responseCheck(res);
   });
 }
 
@@ -126,9 +102,6 @@ export function removeLike(cardId) {
     method: 'DELETE',
     headers: config.headers,
   }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
+    return responseCheck(res);
   });
 }

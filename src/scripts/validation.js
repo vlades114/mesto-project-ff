@@ -13,30 +13,33 @@ export const enableValidation = (config) => {
       evt.preventDefault();
     });
 
-    const inputList = Array.from(
-      formElement.querySelectorAll(config.inputSelector)
-    );
-
-    const buttonElement = formElement.querySelector(
-      config.submitButtonSelector
-    );
-
     clearValidation(formElement, config);
 
-    inputList.forEach((inputElement) => {
-      if (checkTextInputs(inputElement)) {
-        inputElement.setAttribute('data-error-message', textErrorMessage);
-      }
+    setEventListeners(formElement, config);
+  });
+};
 
-      inputElement.addEventListener('input', function () {
-        checkInputValidity(
-          formElement,
-          inputElement,
-          config.inputErrorClass,
-          config.errorClass
-        );
-        toggleButtonState(inputList, buttonElement, config.inactiveButtonClass);
-      });
+// Функция для установки слушателей событий
+const setEventListeners = (formElement, config) => {
+  const inputList = Array.from(
+    formElement.querySelectorAll(config.inputSelector)
+  );
+
+  const buttonElement = formElement.querySelector(config.submitButtonSelector);
+
+  inputList.forEach((inputElement) => {
+    if (checkTextInputs(inputElement)) {
+      inputElement.setAttribute('data-error-message', textErrorMessage);
+    }
+
+    inputElement.addEventListener('input', function () {
+      checkInputValidity(
+        formElement,
+        inputElement,
+        config.inputErrorClass,
+        config.errorClass
+      );
+      toggleButtonState(inputList, buttonElement, config.inactiveButtonClass);
     });
   });
 };
@@ -59,7 +62,11 @@ export const clearValidation = (formElement, validationConfig) => {
     )
   );
 
-  toggleButtonState(inputList, buttonElement, validationConfig.inactiveButtonClass);
+  toggleButtonState(
+    inputList,
+    buttonElement,
+    validationConfig.inactiveButtonClass
+  );
 };
 
 function toggleButtonState(inputList, buttonElement, inactiveButtonClass) {
