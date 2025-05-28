@@ -188,107 +188,97 @@ popups.forEach((popup) => {
   });
 });
 
-//Обработчик отправки форм
-function handleFormSubmit(evt, popup, callback) {
-  evt.preventDefault();
-  callback();
-  closeModal(popup);
-}
-
 //Фнкция-обработчик события открытия модального окна для редактирования профиля
 function handleEditForm(evt) {
-  handleFormSubmit(evt, popupEditProfile, () => {
-    const formButton = editProfileForm.querySelector(
-      config.submitButtonSelector
-    );
-    const buttonOrigText = formButton.textContent;
-    formButton.textContent = saving;
-    updateUserInfo(editProfileFormName.value, editProfileFormDescription.value)
-      .then((updatedUserInfo) => {
-        profileTitle.textContent = updatedUserInfo.name;
-        profileDescription.textContent = updatedUserInfo.about;
-      })
-      .finally(() => {
-        formButton.textContent = buttonOrigText;
-      });
-  });
+  evt.preventDefault();
+  const formButton = editProfileForm.querySelector(config.submitButtonSelector);
+  const buttonOrigText = formButton.textContent;
+  formButton.textContent = saving;
+  updateUserInfo(editProfileFormName.value, editProfileFormDescription.value)
+    .then((updatedUserInfo) => {
+      profileTitle.textContent = updatedUserInfo.name;
+      profileDescription.textContent = updatedUserInfo.about;
+      closeModal(popupEditProfile);
+    })
+    .finally(() => {
+      formButton.textContent = buttonOrigText;
+    });
 }
 
 //Фнкция-обработчик события создания новой карточки
 function handleNewPlaceForm(evt) {
-  handleFormSubmit(evt, popupNewCard, () => {
-    const formButton = newCardForm.querySelector(config.submitButtonSelector);
-    const buttonOrigText = formButton.textContent;
-    formButton.textContent = saving;
-    const newCard = {
-      name: newCardFormName.value,
-      link: newCardFormLink.value,
-    };
-    addCard(newCard.name, newCard.link)
-      .then((newCardFromServer) => {
-        const createdCard = createCard(
-          newCardFromServer,
-          {
-            handleDeleteCard,
-            handleLikeCard,
-            handleOpenCard,
-          },
-          newCardFromServer.owner._id
-        );
-        placesList.prepend(createdCard);
-        newCardForm.reset();
-      })
-      .finally(() => {
-        formButton.textContent = buttonOrigText;
-      });
-  });
+  evt.preventDefault();
+  const formButton = newCardForm.querySelector(config.submitButtonSelector);
+  const buttonOrigText = formButton.textContent;
+  formButton.textContent = saving;
+  const newCard = {
+    name: newCardFormName.value,
+    link: newCardFormLink.value,
+  };
+  addCard(newCard.name, newCard.link)
+    .then((newCardFromServer) => {
+      const createdCard = createCard(
+        newCardFromServer,
+        {
+          handleDeleteCard,
+          handleLikeCard,
+          handleOpenCard,
+        },
+        newCardFromServer.owner._id
+      );
+      placesList.prepend(createdCard);
+      closeModal(popupNewCard);
+      newCardForm.reset();
+    })
+    .finally(() => {
+      formButton.textContent = buttonOrigText;
+    });
 }
 
 //Фнкция-обработчик события удаления карточки
 function handleDeleteCardForm(evt) {
+  evt.preventDefault();
   if (!cardForDelete.cardElement) return;
-  handleFormSubmit(evt, popupDeleteCard, () => {
-    deleteCard(cardForDelete.id)
-      .then(() => {
-        removeCard(cardForDelete.cardElement);
-        cardForDelete = {};
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  });
+  deleteCard(cardForDelete.id)
+    .then(() => {
+      removeCard(cardForDelete.cardElement);
+      cardForDelete = {};
+      closeModal(popupDeleteCard);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 //Фнкция-обработчик события обновления аватара
 function handleUpdateAvatarForm(evt) {
-  handleFormSubmit(evt, popupUpdateAvatar, () => {
-    const avatarUrl = updateUserAvatarForm.elements.link.value;
-    const formButton = updateUserAvatarForm.querySelector(
-      config.submitButtonSelector
-    );
-    const buttonOrigText = formButton.textContent;
-    formButton.textContent = saving;
-    fetch(avatarUrl, { method: 'HEAD' })
-      .then((res) => {
-        if (!res.ok) {
-          return Promise.reject(`${res.status}`);
-        }
-        const contentType = res.headers.get('Content-Type');
-        if (!contentType || !contentType.startsWith('image/')) {
-          return Promise.reject('ссылка не является изображением');
-        }
-        return updateUserAvatar(avatarUrl);
-      })
-      .then(() => {
-        profileAvatar.style.backgroundImage = `url('${avatarUrl}')`;
-        closeModal(popupUpdateAvatar);
-        updateUserAvatarForm.reset();
-      })
-      .catch((err) => {
-        console.log(`Ошибка: ${err}`);
-      })
-      .finally(() => {
-        formButton.textContent = buttonOrigText;
-      });
-  });
+  evt.preventDefault();
+  const avatarUrl = updateUserAvatarForm.elements.link.value;
+  const formButton = updateUserAvatarForm.querySelector(
+    config.submitButtonSelector
+  );
+  const buttonOrigText = formButton.textContent;
+  formButton.textContent = saving;
+  fetch(avatarUrl, { method: 'HEAD' })
+    .then((res) => {
+      if (!res.ok) {
+        return Promise.reject(`${res.status}`);
+      }
+      const contentType = res.headers.get('Content-Type');
+      if (!contentType || !contentType.startsWith('image/')) {
+        return Promise.reject('ссылка не является изображением');
+      }
+      return updateUserAvatar(avatarUrl);
+    })
+    .then(() => {
+      profileAvatar.style.backgroundImage = `url('${avatarUrl}')`;
+      closeModal(popupUpdateAvatar);
+      updateUserAvatarForm.reset();
+    })
+    .catch((err) => {
+      console.log(`Ошибка: ${err}`);
+    })
+    .finally(() => {
+      formButton.textContent = buttonOrigText;
+    });
 }
